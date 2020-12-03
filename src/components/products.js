@@ -21,7 +21,7 @@ class Products extends Component {
               <div className="card-body">
                 <p className="mb-0 text-truncate card-text">{product.title}</p>
                 <div class="d-flex justify-content-between">
-                  <button className="btn btn-sm btn-secondary">
+                  <button onClick={()=>this.props.addToCart(product)} className="btn btn-sm btn-secondary">
                     Add to cart
                   </button>
                   <p className="mb-0 align-self-center">

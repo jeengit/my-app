@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import data from "./data.json";
 import Products from "./components/products";
 import Filter from "./components/filter";
+import Cart from "./components/cart";
 class App extends Component {
   constructor(props) {
     super(props);
@@ -9,8 +10,13 @@ class App extends Component {
       products: data.products,
       size: "",
       sort: "",
+      cartItems: [],
     };
   }
+  handleRemoveCart = (product) => {
+    const cartItems = [...this.state.cartItems];
+    this.setState({cartItems:cartItems.filter((x) => x._id !== product._id)})
+  };
   handleFilterProducts = (event) => {
     event.target.value
       ? this.setState({
@@ -41,6 +47,20 @@ class App extends Component {
       ),
     });
   };
+  handleAddToCart = (product) => {
+    const cartItems = [...this.state.cartItems];
+    let alreadyInCart = false;
+    cartItems.forEach((item) => {
+      if (item._id === product._id) {
+        item.count++;
+        alreadyInCart = true;
+      }
+    });
+    if (!alreadyInCart) {
+      cartItems.push({ ...product, count: 1 });
+    }
+    this.setState({ cartItems });
+  };
   render() {
     return (
       <div className="container">
@@ -60,9 +80,17 @@ class App extends Component {
               filterProducts={this.handleFilterProducts}
               sortProducts={this.handleSortProducts}
             />
-            <Products products={this.state.products} />
+            <Products
+              products={this.state.products}
+              addToCart={this.handleAddToCart}
+            />
           </div>
-          <div className="col-md-3 mt-4 float-left">Cart Section</div>
+          <div className="col-md-3 mt-4 float-left">
+            <Cart
+              cartItems={this.state.cartItems}
+              removeCart={this.handleRemoveCart}
+            />
+          </div>
         </main>
         <footer />
       </div>
